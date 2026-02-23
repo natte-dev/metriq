@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id              Int              @id @default(autoincrement())
+  name            String           @db.VarChar(100)
+  created_at      DateTime         @default(now())
+  cronograma      Cronograma[]
+  visitas         Visita[]
+  atendimentos    Atendimento[]
+  erros           Erro[]
+  department_auth DepartmentAuth?
+
+  @@map("departments")
+}
+
+model DepartmentAuth {
+  department_id Int        @id
+  password_hash String     @db.VarChar(255)
+  updated_at    DateTime   @default(now()) @updatedAt
+  department    Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
+
+  @@map("department_auth")
+}
+
+model Month {
+  id         Int      @id @default(autoincrement())
+  value      String   @unique @db.Char(7)
+  created_at DateTime @default(now())
+
+  @@map("months")
+}
+
+model StatusVisita {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  created_at DateTime @default(now())
+  visitas    Visita[]
+
+  @@map("status_visita")
+}
+
+model Semana {
+  id         Int      @id @default(autoincrement())
+  number     Int
+  created_at DateTime @default(now())
+  visitas    Visita[]
+
+  @@map("semanas")
+}
+
+model Nota {
+  id           Int           @id @default(autoincrement())
+  value        Int
+  created_at   DateTime      @default(now())
+  atendimentos Atendimento[]
+
+  @@map("notas")
+}
+
+model TipoErro {
+  id             Int      @id @default(autoincrement())
+  name           String   @db.VarChar(100)
+  penalty_points Int
+  created_at     DateTime @default(now())
+  erros          Erro[]
+
+  @@map("tipo_erro")
+}
+
+model AppParams {
+  id                     Int     @id @default(autoincrement())
+  meta_visitas_mes       Int     @default(4)
+  escala_atendimento_max Decimal @default(5) @db.Decimal(5, 2)
+  peso_visitacao         Decimal @default(0.40) @db.Decimal(5, 4)
+  peso_atendimento       Decimal @default(0.35) @db.Decimal(5, 4)
+  peso_qualidade         Decimal @default(0.25) @db.Decimal(5, 4)
+  bonus_trimestral       Decimal @default(150.00) @db.Decimal(10, 2)
+  bonus_semestral        Decimal @default(300.00) @db.Decimal(10, 2)
+  bonus_anual            Decimal @default(300.00) @db.Decimal(10, 2)
+
+  @@map("app_params")
+}
+
+model Responsavel {
+  id           Int          @id @default(autoincrement())
+  nome         String       @db.VarChar(200)
+  setor        String?      @db.VarChar(200)
+  is_active    Boolean      @default(true)
+  created_at   DateTime     @default(now())
+  cronogramas  Cronograma[]
+  visitas      Visita[]
+  atendimentos Atendimento[]
+  erros        Erro[]
+
+  @@map("responsaveis")
+}
+
+model Cliente {
+  id           Int           @id @default(autoincrement())
+  nome         String        @db.VarChar(200)
+  empresa      String?       @db.VarChar(200)
+  cnpj         String?       @db.VarChar(20)
+  telefone     String?       @db.VarChar(30)
+  is_active    Boolean       @default(true)
+  created_at   DateTime      @default(now())
+  cronogramas  Cronograma[]
+  visitas      Visita[]
+  atendimentos Atendimento[]
+  erros        Erro[]
+
+  @@map("clientes")
+}
+
+model Cronograma {
+  id               Int          @id @default(autoincrement())
+  month            String       @db.Char(7)
+  department_id    Int
+  week_num         Int
+  cliente_id       Int?
+  cliente_text     String?      @db.VarChar(200)
+  data_agendada    DateTime?    @db.Date
+  responsavel_id   Int?
+  responsavel_text String?      @db.VarChar(200)
+  observacoes      String?      @db.Text
+  created_at       DateTime     @default(now())
+  department       Department   @relation(fields: [department_id], references: [id])
+  responsavel      Responsavel? @relation(fields: [responsavel_id], references: [id])
+  cliente          Cliente?     @relation(fields: [cliente_id], references: [id])
+  visitas          Visita[]
+
+  @@unique([month, department_id, week_num])
+  @@map("cronograma")
+}
+
+model Visita {
+  id                          Int          @id @default(autoincrement())
+  department_id               Int
+  month                       String       @db.Char(7)
+  week_id                     Int
+  status_id                   Int
+  responsavel_id              Int?
+  responsavel_text            String?      @db.VarChar(200)
+  responsavel_nome            String?      @db.VarChar(200)
+  responsavel_setor           String?      @db.VarChar(200)
+  responsavel_tempo           String?      @db.VarChar(100)
+  cliente_id                  Int?
+  cliente_text                String?      @db.VarChar(200)
+  cliente                     String?      @db.VarChar(200)
+  data_agendada               DateTime?    @db.Date
+  data_realizada              DateTime?    @db.Date
+  ata_anexada                 Boolean      @default(false)
+  pendencias_criadas          Boolean      @default(false)
+  pendencias_prazo            Boolean      @default(false)
+  observacoes                 String?      @db.Text
+  generated_from_cronograma_id Int?
+  created_at                  DateTime     @default(now())
+  department                  Department   @relation(fields: [department_id], references: [id])
+  semana                      Semana       @relation(fields: [week_id], references: [id])
+  status                      StatusVisita @relation(fields: [status_id], references: [id])
+  responsavel_rel             Responsavel? @relation(fields: [responsavel_id], references: [id])
+  cliente_rel                 Cliente?     @relation(fields: [cliente_id], references: [id])
+  cronograma_origem           Cronograma?  @relation(fields: [generated_from_cronograma_id], references: [id])
+
+  @@map("visitas")
+}
+
+model Atendimento {
+  id               Int          @id @default(autoincrement())
+  department_id    Int
+  month            String       @db.Char(7)
+  responsavel_id   Int?
+  responsavel_text String?      @db.VarChar(200)
+  responsavel      String?      @db.VarChar(200)
+  cliente_id       Int?
+  cliente_text     String?      @db.VarChar(200)
+  cliente          String?      @db.VarChar(200)
+  data             DateTime?    @db.Date
+  nota_id          Int
+  sla_prazo        Boolean      @default(true)
+  comentario       String?      @db.Text
+  created_at       DateTime     @default(now())
+  department       Department   @relation(fields: [department_id], references: [id])
+  nota             Nota         @relation(fields: [nota_id], references: [id])
+  responsavel_rel  Responsavel? @relation(fields: [responsavel_id], references: [id])
+  cliente_rel      Cliente?     @relation(fields: [cliente_id], references: [id])
+
+  @@map("atendimentos")
+}
+
+model Erro {
+  id                      Int          @id @default(autoincrement())
+  department_id           Int
+  month                   String       @db.Char(7)
+  responsavel_id          Int?
+  responsavel_text        String?      @db.VarChar(200)
+  responsavel             String?      @db.VarChar(200)
+  cliente_id              Int?
+  cliente_text            String?      @db.VarChar(200)
+  cliente                 String?      @db.VarChar(200)
+  data                    DateTime?    @db.Date
+  tipo_erro_id            Int
+  penalty_points_override Int?
+  descricao               String?      @db.Text
+  created_at              DateTime     @default(now())
+  department              Department   @relation(fields: [department_id], references: [id])
+  tipo_erro               TipoErro     @relation(fields: [tipo_erro_id], references: [id])
+  responsavel_rel         Responsavel? @relation(fields: [responsavel_id], references: [id])
+  cliente_rel             Cliente?     @relation(fields: [cliente_id], references: [id])
+
+  @@map("erros")
+}
