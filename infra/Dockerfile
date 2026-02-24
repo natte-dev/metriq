@@ -13,6 +13,7 @@ RUN npx prisma generate
 FROM node:20-alpine AS builder
 RUN apk add --no-cache openssl
 WORKDIR /app
+RUN mkdir -p /app/public
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
