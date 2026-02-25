@@ -96,7 +96,7 @@ export function EntrarClientPage({ departments }: Props) {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6">
         <div className="flex flex-col items-center gap-2 text-center">
-          <Image src="/logo.png" alt="Metriq" width={56} height={56} className="object-contain invert dark:invert-0" />
+          <Image src="/logo.png" alt="Metriq" width={56} height={56} className="object-contain invert dark:invert-0" unoptimized />
           <h1 className="text-3xl font-bold">Metriq</h1>
           <p className="text-muted-foreground">
             Sistema de controle de metas por departamento

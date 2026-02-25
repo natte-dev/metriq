@@ -64,7 +64,7 @@ export function Sidebar({ role, coordDeptName }: SidebarProps) {
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r bg-background">
       <div className="flex h-16 items-center border-b px-6">
         <Link href={role === "manager" ? "/" : "/cronograma"} className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Metriq" width={32} height={32} className="object-contain invert dark:invert-0" />
+          <Image src="/logo.png" alt="Metriq" width={32} height={32} className="object-contain invert dark:invert-0" unoptimized />
           <span className="text-xl font-bold text-primary">Metriq</span>
         </Link>
       </div>
