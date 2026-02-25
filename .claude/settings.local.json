@@ -46,7 +46,8 @@
       "Bash(cygpath:*)",
       "Bash(mount:*)",
       "Bash(netstat:*)",
-      "Bash(tasklist:*)"
+      "Bash(tasklist:*)",
+      "Bash(copy \"C:\\\\Users\\\\nathan.carvalho\\\\Documents\\\\metriq\\\\public\\\\logo.png\" \"C:\\\\Users\\\\nathan.carvalho\\\\Documents\\\\metriq\\\\src\\\\app\\\\icon.png\")"
     ]
   }
 }

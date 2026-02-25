@@ -19,7 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BarChart2, Lock, UserCheck, Loader2, ArrowLeft } from "lucide-react";
+import Image from "next/image";
+import { Lock, UserCheck, Loader2, ArrowLeft } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 type Department = { id: number; name: string };
@@ -95,7 +96,7 @@ export function EntrarClientPage({ departments }: Props) {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6">
         <div className="flex flex-col items-center gap-2 text-center">
-          <BarChart2 className="h-12 w-12 text-primary" />
+          <Image src="/logo.png" alt="Metriq" width={56} height={56} className="object-contain invert dark:invert-0" />
           <h1 className="text-3xl font-bold">Metriq</h1>
           <p className="text-muted-foreground">
             Sistema de controle de metas por departamento

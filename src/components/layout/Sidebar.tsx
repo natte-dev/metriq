@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
@@ -63,7 +64,7 @@ export function Sidebar({ role, coordDeptName }: SidebarProps) {
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r bg-background">
       <div className="flex h-16 items-center border-b px-6">
         <Link href={role === "manager" ? "/" : "/cronograma"} className="flex items-center gap-2">
-          <BarChart2 className="h-6 w-6 text-primary" />
+          <Image src="/logo.png" alt="Metriq" width={32} height={32} className="object-contain invert dark:invert-0" />
           <span className="text-xl font-bold text-primary">Metriq</span>
         </Link>
       </div>
