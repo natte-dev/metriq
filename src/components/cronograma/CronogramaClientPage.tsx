@@ -358,8 +358,8 @@ export function CronogramaClientPage({
                 options={clientesOptions}
                 selectedId={form.cliente_id}
                 textValue={form.cliente_text}
-                onSelectId={(id) => setForm({ ...form, cliente_id: id })}
-                onTextChange={(t) => setForm({ ...form, cliente_text: t })}
+                onSelectId={(id) => setForm((prev) => ({ ...prev, cliente_id: id }))}
+                onTextChange={(t) => setForm((prev) => ({ ...prev, cliente_text: t }))}
                 placeholder="Nome do cliente..."
               />
             </div>
@@ -369,8 +369,8 @@ export function CronogramaClientPage({
                 options={responsaveisOptions}
                 selectedId={form.responsavel_id}
                 textValue={form.responsavel_text}
-                onSelectId={(id) => setForm({ ...form, responsavel_id: id })}
-                onTextChange={(t) => setForm({ ...form, responsavel_text: t })}
+                onSelectId={(id) => setForm((prev) => ({ ...prev, responsavel_id: id }))}
+                onTextChange={(t) => setForm((prev) => ({ ...prev, responsavel_text: t }))}
                 placeholder="Nome do responsavel..."
               />
             </div>
